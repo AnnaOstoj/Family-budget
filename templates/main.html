@@ -1,0 +1,74 @@
+{% extends "parent.html" %}
+{% block content %}
+<div class="container">
+    
+    <table class="col table table-sm table-bordered">
+        <thead>
+            <th>Expense type</th>
+            <th>Already spent</th>
+            <th>Budget</th>
+        </thead>
+    {% for budget in budgets %}
+        <tr>
+            <td><a href="/main/{{ loop.index }}">{{ budget.expense_type }}</a></td>
+            <td> {{ budget.sum }} </td>
+            <td>{{ budget.budget }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <div class="row">
+        <div class="col table-bordered">
+            <div class="form-group text-center">
+                <h2> Register new expense </h2>
+
+                <form method="POST" action="/main/">
+                    {{ form_expenses.hidden_tag() }}
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            <table class="table-sm table table-responsive">
+                                {% for field in form_expenses if field.widget.input_type != 'hidden' %}
+                                    <tr>
+                                        <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                                        <td>{{ field }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    <input type="submit" value="Add" name="btn" class="btn btn-primary">
+                </form>
+                <br>
+                <form method="POST" action="/expenses/">
+                    <input type="submit" name="btn" value="Show expenses" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+        <div class="col table-bordered">
+            <div class="form-group text-center">
+                <h2> Plan your budget </h2>
+                <form method="POST" action="/main/">
+                    {{ form_budget.hidden_tag() }}
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            <table class="table-sm table table-responsive">
+                                {% for field in form_budget if field.widget.input_type != 'hidden' %}
+                                    <tr>
+                                        <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                                        <td>{{ field }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+
+                    <input type="submit" name="btn" value="Add" class="btn btn-primary">
+
+                </form>
+            </div>
+        </div>
+        
+    </div>
+</div>
+</body>
+{% endblock %}

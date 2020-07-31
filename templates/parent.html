@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+    {% block head %}
+        <meta charset="utf-8">
+        <title>Family budget</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        
+    {% endblock %}
+    </head>
+    <body>
+        <div class="jumbotron">
+            <div class="header display-4 font-weight-bold text-uppercase text-center">
+                <h1 class="title">Family budget</h1>
+            </div>
+            <div id="content">{% block content %}{% endblock %}</div>
+        </div>
+    </body>
+</html>

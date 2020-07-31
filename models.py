@@ -55,6 +55,13 @@ class Budget:
         self.budgets[id]['expense_type'] = data['expense_type']
         self.budgets[id]['budget'] = data['budget']
         self.save_all()
+    
+    def delete(self, id):
+        budget = self.get(id)
+        if budget:
+            self.budgets.remove(budget)
+            self.save_all()
+
 
     def sum(self, expense_type, amount):
         for item in self.budgets:
@@ -64,6 +71,11 @@ class Budget:
                 else:
                     item.update({'sum': float(amount) })
                 self.save_all()
-        
+    
+    def check_type(self, expense_type):
+        for item in self.budgets:
+            if item['expense_type'] == expense_type:
+                return True
+        return False  
 expenses = Expenses()
 budgets = Budget()
