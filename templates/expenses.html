@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expenses monitoring</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        table, th, tr, td {border: 1px solid black;}
+    </style>
+</head>
+<div class="container">
+    <header class="text-center">
+        <h1>Family budget</h1>
+    </header>
+    <div class="row">
+        <div class="col table-bordered">
+            <div class="form-group text-center">
+                <h2> Add new expense </h2>
+                <form method="POST" action="/expenses/">
+                    {{ form_expenses.hidden_tag() }}
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            <table class="table-sm table table-responsive">
+                                {% for field in form_expenses if field.widget.input_type != 'hidden' %}
+                                    <tr>
+                                        <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                                        <td>{{ field }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    <input type="submit" value="Add" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+        <div class="col table-bordered">
+            <div class="form-group text-center">
+                <h2> Plan your budget </h2>
+                <form method="POST" action="/expenses/">
+                    {{ form_budget.hidden_tag() }}
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            <table class="table-sm table table-responsive">
+                                {% for field in form_budget if field.widget.input_type != 'hidden' %}
+                                    <tr>
+                                        <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                                        <td>{{ field }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    <input type="submit" value="Add" class="btn btn-primary">
+
+                </form>
+            </div>
+        </div>
+
+        <table class="col table table-sm table-bordered">
+            <thead>
+                <th>Expense type</th>
+                <th>Sum of expenses</th>
+                <th>Budget</th>
+            </thead>
+        {% for budget in budgets %}
+            <tr>
+                <td><a href="/expenses/{{ loop.index }}">{{ budget.expense_type }}</a></td>
+                <td> {{ budget.sum }} </td>
+                <td>{{ budget.budget }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        
+    </div>
+
+
+    <h2 class="text-center">Expenses</h2>
+
+    <table class="table">
+        <thead class="thead-dark">
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Comment</th>
+        </thead>
+    {% for expense in expenses %}
+        <tr>
+            <td>{{ expense.date }}</td>
+            <td>{{ expense.expense_type }}</td>
+            <td>{{ expense.amount }}</td>
+            <td>{{ expense.comment }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+</body>
+</html>

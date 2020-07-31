@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense details</title>
+</head>
+<body>
+    <h2> Modify: </h2>
+    <form method="POST" action="/expenses/{{ budget_id }}/">
+        {{ form_budget.hidden_tag() }}
+        <table class="table">
+            {% for field in form_budget if field.widget.input_type != 'hidden' %}
+                <tr>
+                    <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                    <td>{{ field }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Save" class="btn btn-primary">
+    </form>
+</body>
+</html>
