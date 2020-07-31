@@ -1,14 +1,14 @@
 from flask_wtf import FlaskForm
-from wtforms import FloatField, TextAreaField, DateField, SelectField, StringField
-from wtforms.validators import DataRequired
+from wtforms import FloatField, TextAreaField, SelectField, StringField
+from wtforms.validators import DataRequired, ValidationError
+from wtforms.fields.html5 import DateField
 
 
 class ExpenseForm(FlaskForm):
+    #date = DateField('Date', format="%d.%m.%Y", validators=[DataRequired()])
     date = StringField('Date', validators=[DataRequired()])
-    expense_type = SelectField(choices=[('Food', 'Food'), ('Rent', 'Rent'), ('Clothes', 'Clothes'),
-                                        ('Pets', 'Pets'), ('Education', 'Education'), ('Entertainment', "Entertainment")],
-                                        validators=[DataRequired()])
-    amount = FloatField('Amount', validators=[DataRequired()])
+    expense_type = SelectField('Select Field', choices=[], validators=[DataRequired()])
+    amount = FloatField('Amount', [DataRequired()])
     comment = TextAreaField('Comment')
 
 class BudgetForm(FlaskForm):

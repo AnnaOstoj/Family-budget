@@ -16,7 +16,10 @@
         </tr>
     {% endfor %}
     </table>
-
+    <div class="table-bordered">
+        <p><b>Your total budget for this month:</b> {{ total_budget }}</p>
+        <p><b>Amount which you can still spend:</b> {{ amount_left }}</p>
+    </div>
     <div class="row">
         <div class="col table-bordered">
             <div class="form-group text-center">

@@ -28,6 +28,7 @@ class Expenses:
         self.expenses[id] = data
         self.save_all()
 
+
 class Budget:
     def __init__(self):
         try:
@@ -38,8 +39,11 @@ class Budget:
 
     def create(self, data):
         data.pop('csrf_token')
-        self.budgets.append(data)
-
+        data['sum'] = 0
+        keys = [i['expense_type'] for i in self.budgets]
+        if data['expense_type'] not in keys:
+            self.budgets.append(data)
+        
     def all(self):
         return self.budgets
     
@@ -77,5 +81,15 @@ class Budget:
             if item['expense_type'] == expense_type:
                 return True
         return False  
+
+    def sum_total_budget(self):
+        total_budget = sum(item['budget'] for item in self.budgets)
+        return total_budget
+
+    def sum_amount_left(self):
+        total_expenses = sum(item['sum'] for item in self.budgets)
+        return self.sum_total_budget() - total_expenses
+
+
 expenses = Expenses()
 budgets = Budget()
