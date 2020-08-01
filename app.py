@@ -1,6 +1,7 @@
-from flask import Flask, flash, request, render_template, redirect, url_for
+from flask import abort, Flask, flash, jsonify, make_response, request, render_template, redirect, url_for
 from datetime import datetime
 from forms import ExpenseForm, BudgetForm
+import json
 from models import expenses, budgets
 
 app = Flask(__name__)
@@ -57,6 +58,47 @@ def budget_details(budget_id):
             flash(f"Your budget for {form_budget.data['expense_type']} is deleted", 'success')
             return redirect(url_for("expenses_add"))
     return render_template("budget.html", form_budget=form_budget, budget_id=budget_id)
+
+
+@app.route("/api/v1/expenses/", methods=["GET"])
+def expenses_list_api_v1():
+    return jsonify(expenses.all())
+
+@app.route("/api/v1/budget/<int:budget_id>", methods=["GET"])
+def get_budget(budget_id):
+    budget = budgets.get(budget_id)
+    print(budget)
+    if not budget:
+        abort(404)
+    return jsonify({"budget": budget})
+
+@app.route("/api/v1/main/", methods=["POST"]) # nie działa?
+def create_expense():
+    if not request.json or not 'expense_type' in request.json:
+       abort(400)
+    expense = {
+        'date': request.json['date'],
+        'expense_type': request.json['expense_type'],
+        'amount': request.json['amount'],
+        'comment':request.json['comment']
+    }
+    expenses.create(expense)
+
+    return jsonify({'expense': expense}), 201   
+
+@app.route("/api/v1/main/<int:budget_id>", methods=['DELETE']) # nie działa!
+def delete_budget(budget_id):
+    result = budgets.get(budget_id - 1)
+    budgets.delete(budget_id - 1)
+    return jsonify({'result': result})
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found', 'status_code': 404}), 404)
+
+@app.errorhandler(400)
+def bad_request(error):
+    return make_response(jsonify({'error': 'Bad request', 'status_code': 400}), 400)
 
 
 if __name__ == "__main__":

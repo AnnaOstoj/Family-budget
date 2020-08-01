@@ -1,1 +1,1 @@
-[{"expense_type": "Food", "budget": 1000.0, "sum": 0}, {"expense_type": "Clothes", "budget": 500.0, "sum": 100.0}, {"expense_type": "Rent", "budget": 2000.0, "sum": 0}, {"expense_type": "Other", "budget": 1000.0, "sum": 0}]
+[{"expense_type": "Clothes", "budget": 500.0, "sum": 0}, {"expense_type": "Rent", "budget": 1500.0, "sum": 100.0}, {"expense_type": "Food", "budget": 1000.0, "sum": 0}]
