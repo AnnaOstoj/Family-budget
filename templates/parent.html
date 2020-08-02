@@ -4,9 +4,8 @@
     {% block head %}
         <meta charset="utf-8">
         <title>Family budget</title>
-        <link rel="stylesheet" href="styles.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-        
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     {% endblock %}
     </head>
     {% with messages = get_flashed_messages(with_categories=true) %}

@@ -10,7 +10,7 @@
         </thead>
     {% for budget in budgets %}
         <tr>
-            <td><a href="/main/{{ loop.index }}">{{ budget.expense_type }}</a></td>
+            <td><a href="/main/budget/{{ loop.index }}">{{ budget.expense_type }}</a></td>
             <td> {{ budget.sum }} </td>
             <td>{{ budget.budget }}</td>
         </tr>

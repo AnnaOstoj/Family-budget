@@ -2,7 +2,7 @@
 {% block content %}
 <body>
     <h2> Modify: </h2>
-    <form method="POST" action="/main/{{ budget_id }}/">
+    <form method="POST" action="/main/budget/{{ budget_id }}/">
         {{ form_budget.hidden_tag() }}
         <table class="table">
             {% for field in form_budget if field.widget.input_type != 'hidden' %}

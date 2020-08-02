@@ -16,6 +16,7 @@ def expenses_add():
     
     if request.method == "POST":
         if request.form["btn"] == "Add":
+
             if form_expenses.validate_on_submit():  
                 if budgets.check_type(form_expenses.data['expense_type']):
                     expenses.create(form_expenses.data)
@@ -44,7 +45,7 @@ def expenses_list():
     return render_template("expenses.html", expenses=expenses.all())
 
 
-@app.route("/main/<int:budget_id>/", methods=["GET", "POST"])
+@app.route("/main/budget/<int:budget_id>/", methods=["GET", "POST"])
 def budget_details(budget_id):
     budget = budgets.get(budget_id - 1)
     form_budget = BudgetForm(data=budget)
@@ -72,10 +73,18 @@ def get_budget(budget_id):
         abort(404)
     return jsonify({"budget": budget})
 
-@app.route("/api/v1/main/", methods=["POST"]) # nie działa?
+@app.route("/api/v1/main", methods=["POST"]) # nie działa
 def create_expense():
+
+    data = request.get_json()
+
+    name = data['name']
+    return jsonify({"result": "Success", "name": name})
+
+"""
     if not request.json or not 'expense_type' in request.json:
        abort(400)
+
     expense = {
         'date': request.json['date'],
         'expense_type': request.json['expense_type'],
@@ -84,9 +93,9 @@ def create_expense():
     }
     expenses.create(expense)
 
-    return jsonify({'expense': expense}), 201   
-
-@app.route("/api/v1/main/<int:budget_id>", methods=['DELETE']) # nie działa!
+    return make_response(jsonify({'expense': expense}), 201)   
+"""
+@app.route("/api/v1/main/<int:budget_id>", methods=['DELETE'])
 def delete_budget(budget_id):
     result = budgets.get(budget_id - 1)
     budgets.delete(budget_id - 1)
