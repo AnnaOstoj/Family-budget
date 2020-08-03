@@ -43,6 +43,8 @@ def add_budget():
 def add_expense():
     form_expenses = ExpenseForm()
     form_expenses.expense_type.choices = [(str(i['expense_type']), i['expense_type']) for i in budgets.all()]
+    month_number = date.today().month
+
     if request.method == "POST":
         if request.form["btn"] == "Add":
 
@@ -50,9 +52,9 @@ def add_expense():
                 if budgets.check_type(form_expenses.data['expense_type']):
                     expenses.create(form_expenses.data)
                     expenses.save_all()
-                    print("check 3")        
-                    budgets.sum(form_expenses.data['expense_type'], form_expenses.data['amount'])  
-                    flash("Your expense has been registered", 'success')
+                    if form_expenses.data['date'].month == month_number:   
+                        budgets.sum(form_expenses.data['expense_type'], form_expenses.data['amount'])  
+                        flash("Your expense has been registered", 'success')
                 else: 
                     flash("Expense not registered. Expense type does not exist in your budget", 'danger')
                 return redirect(url_for("add_expense"))
