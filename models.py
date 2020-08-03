@@ -1,5 +1,11 @@
 import json
+import datetime
 
+def myconverter(o):
+    print(o)
+    if isinstance(o, datetime.date):
+        print(o.__str__)
+        return o.__str__()
 
 class Expenses:
     def __init__(self):
@@ -21,13 +27,16 @@ class Expenses:
 
     def save_all(self):
         with open("expenses.json", "w") as f:
-            json.dump(self.expenses, f)
+            json.dump(self.expenses, f, default=myconverter)
+        print(self.expenses)
 
     def update(self, id, data):
         data.pop('csrf_token')
         self.expenses[id] = data
         self.save_all()
 
+    def filter(self, month):
+        return [i for i in self.expenses if datetime.datetime.strptime(str(i['date']), "%Y-%m-%d").month == month]
 
 class Budget:
     def __init__(self):

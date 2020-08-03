@@ -1,0 +1,31 @@
+{% extends "parent.html" %}
+{% block content %}
+
+<div class="table-bordered">
+    <div class="form-group text-center">
+        <h2> Register new expense </h2>
+
+        <form method="POST" action="/regexpense/">
+            {{ form_expenses.hidden_tag() }}
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <table class="table-sm table table-responsive">
+                        {% for field in form_expenses if field.widget.input_type != 'hidden' %}
+                            <tr>
+                                <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                                <td>{{ field }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <input type="submit" value="Add" name="btn" class="btn btn-primary">
+        </form>
+        <br>
+        <form method="POST" action="/main/">
+            <input type="submit" value="Back" name="btn" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

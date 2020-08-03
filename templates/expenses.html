@@ -1,9 +1,19 @@
 {% extends "parent.html" %}
 {% block content %}
 <div class="container">
-    
     <h2 class="text-center">Expenses</h2>
-
+    <form method = "POST">
+        <table class="table-sm table table-responsive">
+            {% for field in form_month if field.widget.input_type != 'hidden' %}
+                <tr>
+                    <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                    <td>{{ field }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Filter" name="btn" class="btn btn-primary">
+        <input type="submit" value="Show All" name="btn" class="btn btn-primary">
+    </form>
     <table class="table table-bordered">
         <thead class="thead-dark">
             <th>Date</th>

@@ -1,49 +1,81 @@
 from flask import abort, Flask, flash, jsonify, make_response, request, render_template, redirect, url_for
-from datetime import datetime
-from forms import ExpenseForm, BudgetForm
+from datetime import datetime, date
+import calendar
+from forms import ExpenseForm, BudgetForm, MonthForm
 import json
 from models import expenses, budgets
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "nininini"
 
 @app.route("/main/", methods=["GET", "POST"])
-def expenses_add():
-    form_expenses = ExpenseForm()
+def show_main():
+    month_number = date.today().month
+    month = calendar.month_name[month_number]
+
+    if request.method == "POST":
+        if request.form["btn"] == "Register new expense":
+            return redirect(url_for("add_expense"))
+
+        elif request.form["btn"] == "Add budget":
+            return redirect(url_for("add_budget"))
+
+        elif request.form["btn"] == "Show expenses":
+            return redirect(url_for("expenses_list"))
+            
+    return render_template("main.html", month=month,
+                            expenses=expenses.all(), budgets=budgets.all(),
+                            total_budget=budgets.sum_total_budget(), amount_left=budgets.sum_amount_left())
+
+
+@app.route("/addbudget/", methods=["GET", "POST"])
+def add_budget():
     form_budget = BudgetForm()
-    # make the select field in forms dynamic:
+    if request.method == "POST":
+        if form_budget.validate_on_submit():
+            budgets.create(form_budget.data)
+            budgets.save_all()      
+        return redirect(url_for("show_main"))
+    return render_template("add_budget.html",  form_budget=form_budget)
+
+@app.route("/regexpense/", methods=["GET", "POST"])
+def add_expense():
+    form_expenses = ExpenseForm()
     form_expenses.expense_type.choices = [(str(i['expense_type']), i['expense_type']) for i in budgets.all()]
-    
     if request.method == "POST":
         if request.form["btn"] == "Add":
 
             if form_expenses.validate_on_submit():  
                 if budgets.check_type(form_expenses.data['expense_type']):
                     expenses.create(form_expenses.data)
-                    expenses.save_all()               
+                    expenses.save_all()
+                    print("check 3")        
                     budgets.sum(form_expenses.data['expense_type'], form_expenses.data['amount'])  
                     flash("Your expense has been registered", 'success')
                 else: 
                     flash("Expense not registered. Expense type does not exist in your budget", 'danger')
-                return redirect(url_for("expenses_add"))
+                return redirect(url_for("add_expense"))
 
-            if form_budget.validate_on_submit():
-                budgets.create(form_budget.data)
-                budgets.save_all()      
-                return redirect(url_for("expenses_add"))
+        if request.form["btn"] == "Back":
+            return redirect(url_for("show_main"))
 
-        elif request.form["btn"] == "Show expenses":
-            return redirect(url_for("expenses_list"))
-            
-    return render_template("main.html", form_expenses=form_expenses, form_budget=form_budget,
-                            expenses=expenses.all(), budgets=budgets.all(),
-                            total_budget=budgets.sum_total_budget(), amount_left=budgets.sum_amount_left())
-
+    return render_template("reg_expense.html", form_expenses=form_expenses)
 
 @app.route("/expenses/", methods=["GET", "POST"])
 def expenses_list():
-    return render_template("expenses.html", expenses=expenses.all())
 
+    form_month=MonthForm()
+    form_month.month.choices = [calendar.month_name[i] for i in range(1,13)]
+
+    if request.method == "POST":
+        if request.form["btn"] == "Filter":
+            month_name= form_month.data['month']
+            month_number = datetime.strptime(month_name, "%B").month
+            filtered_expenses = expenses.filter(month_number)
+            return render_template("expenses.html", expenses=filtered_expenses, form_month=form_month)
+
+    return render_template("expenses.html", expenses=expenses.all(), form_month=form_month)
 
 @app.route("/main/budget/<int:budget_id>/", methods=["GET", "POST"])
 def budget_details(budget_id):
@@ -53,11 +85,11 @@ def budget_details(budget_id):
         if request.form["btn"] == "Save":
             budgets.update(budget_id - 1, form_budget.data)
             flash(f"Your budget for {form_budget.data['expense_type']} is now modified", 'success')
-            return redirect(url_for("expenses_add"))        
+            return redirect(url_for("show_main"))        
         elif request.form["btn"] == "Delete":
             budgets.delete(budget_id - 1)
             flash(f"Your budget for {form_budget.data['expense_type']} is deleted", 'success')
-            return redirect(url_for("expenses_add"))
+            return redirect(url_for("show_main"))
     return render_template("budget.html", form_budget=form_budget, budget_id=budget_id)
 
 

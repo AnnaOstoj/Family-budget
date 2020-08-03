@@ -9,23 +9,39 @@
     {% endblock %}
     </head>
     {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                <span>{{ message }}</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    <span>{{ message }}</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <body>
-        <div class="jumbotron">
-            <div class="header display-4 font-weight-bold text-uppercase text-center">
-                <h1 class="title">Family budget</h1>
+
+        <div class="header">
+            <div class="jumbotron">
+                <div class="container">
+                    <h1>Family budget!</h1>
+                    <p>Keep your expenses under control</p>
+                </div>
             </div>
+        </div>
+
+        <div class="container">
+            <ul class="nav nav-pills">
+                <li><button class="btn btn-primary"><a href="/main/">Home</a></button></li>
+                <li><button class="btn btn-primary"><a href="/addbudget/">Add budget</a></button></li>
+                <li><button class="btn btn-primary"><a href="/regexpense/">Register new expense</a></button></li>
+                <li><button class="btn btn-primary"><a href="/expenses/">Show all expenses</a></button></li>
+            </ul>
+        </div>
+        <div class="container">
             <div id="content">{% block content %}{% endblock %}</div>
         </div>
+
     </body>
 </html>
