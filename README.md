@@ -33,6 +33,29 @@
    If you get an error, check the correctness of your data. 
 4. You can display the history of your expenses by clicking on "Show expenses" button.
 
+## How to use API
 
+1.  Get list of all your expenses:
+    GET:  /api/v1/expenses/
+
+2. Get list of all your budgets:
+    GET: /api/v1/budgets/
+
+3. Get detsils of selected budget. As <int:budget_id> indicate the position of the budget on the budgets list.
+    GET: /api/v1/budget/<int:budget_id>
+
+4. Add expense to your expenses list. You can add an expense only if budgets for the expense type already exists.
+    POST: /api/v1/expense
+    Header: Content-Type: application/json
+    Body example:
+        {
+        'date': "2020-10-01",
+        'expense_type': "Rent",
+        'amount': 1000,
+        'comment': ""
+        }
+
+5. Delete a budget from the budgets list. As <int:budget_id> indicate the position of the budget on the budgets list.
+    DELETE: /api/v1/main/<int:budget_id>
 
 

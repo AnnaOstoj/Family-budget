@@ -94,27 +94,51 @@ def budget_details(budget_id):
             return redirect(url_for("show_main"))
     return render_template("budget.html", form_budget=form_budget, budget_id=budget_id)
 
-
+# API --------------------------------------------------
 @app.route("/api/v1/expenses/", methods=["GET"])
 def expenses_list_api_v1():
+    """
+    return list of all expenses
+    """
     return jsonify(expenses.all())
 
+
+@app.route("/api/v1/budgets/", methods=["GET"])
+def budgets_list_api_v1():
+    """
+    return budgets list
+    """
+    return jsonify(budgets.all())
+
+
 @app.route("/api/v1/budget/<int:budget_id>", methods=["GET"])
-def get_budget(budget_id):
+def get_budget_api_v1(budget_id):
+    """
+    return details of budget. 
+    budget_id indicates the index of the budget on the list
+    """
     budget = budgets.get(budget_id)
-    print(budget)
     if not budget:
         abort(404)
     return jsonify({"budget": budget})
 
-@app.route("/api/v1/main", methods=["POST"]) # nie działa
-def create_expense():
-
+@app.route("/api/v1/expense", methods=["POST"])
+def create_expense_api_v1():
+    """
+    add an expense to the list
+    attention: cannot add an expense if the expense type is not included in the budget
+    provide the body in json format ex:
+    {
+        'date': "2020-10-01",
+        'expense_type': "Rent",
+        'amount': 1000,
+        'comment': ""
+    }
+    """
     if not request.json or not 'expense_type' in request.json:
         abort(400)
 
     data = request.get_json(force=True)
-    
     expense = {
         'date': data['date'],
         'expense_type': data['expense_type'],
@@ -128,7 +152,11 @@ def create_expense():
         return make_response(jsonify({'result': "incorrect type of expense"}), 400)   
 
 @app.route("/api/v1/main/<int:budget_id>", methods=['DELETE'])
-def delete_budget(budget_id):
+def delete_budget_api_v1(budget_id):
+    """   
+    delete your budget for selected expense type
+    budget_id indicates the position of the budget on the list
+    """
     result = budgets.get(budget_id - 1)
     budgets.delete(budget_id - 1)
     return jsonify({'result': result})
