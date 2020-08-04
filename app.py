@@ -110,25 +110,23 @@ def get_budget(budget_id):
 @app.route("/api/v1/main", methods=["POST"]) # nie działa
 def create_expense():
 
-    data = request.get_json()
-
-    name = data['name']
-    return jsonify({"result": "Success", "name": name})
-
-"""
     if not request.json or not 'expense_type' in request.json:
-       abort(400)
+        abort(400)
 
+    data = request.get_json(force=True)
+    
     expense = {
-        'date': request.json['date'],
-        'expense_type': request.json['expense_type'],
-        'amount': request.json['amount'],
-        'comment':request.json['comment']
+        'date': data['date'],
+        'expense_type': data['expense_type'],
+        'amount': data['amount'],
+        'comment':data['comment']
     }
-    expenses.create(expense)
+    if budgets.check_type(data['expense_type']):
+        expenses.create_request(expense)
+        return make_response(jsonify({'expense': expense}), 201)   
+    else:
+        return make_response(jsonify({'result': "incorrect type of expense"}), 400)   
 
-    return make_response(jsonify({'expense': expense}), 201)   
-"""
 @app.route("/api/v1/main/<int:budget_id>", methods=['DELETE'])
 def delete_budget(budget_id):
     result = budgets.get(budget_id - 1)

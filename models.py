@@ -25,6 +25,10 @@ class Expenses:
         data.pop('csrf_token')
         self.expenses.append(data)
 
+    def create_request(self, data):
+        self.expenses.append(data)
+        self.save_all()
+
     def save_all(self):
         with open("expenses.json", "w") as f:
             json.dump(self.expenses, f, default=myconverter)

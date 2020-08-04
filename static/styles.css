@@ -7,7 +7,6 @@
 }
 .jumbotron h1 {
     font-size: 35px;
-    text-align: center;
 }
 .jumbotron p {
 	font-size: 20px;
@@ -19,10 +18,4 @@
 .menu {
     margin-left: auto;
     margin-right: auto;
-}
-a {
-    color: white;
-}
-ul li {
-    color: white;
 }
