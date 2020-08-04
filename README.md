@@ -36,21 +36,21 @@
 ## How to use API
 
 1.  Get list of all your expenses:
-    Method: GET
+    Method: GET,
     Endpoint: /api/v1/expenses/
 
 2. Get list of all your budgets:
-    Method: GET
+    Method: GET,
     Endpoint: /api/v1/budgets/
 
 3. Get detsils of selected budget. As <int:budget_id> indicate the position of the budget on the budgets list.
-    Method: GET
+    Method: GET,
     Endpoint: /api/v1/budget/<int:budget_id>
 
 4. Add expense to your expenses list. You can add an expense only if budgets for the expense type already exists.
-    Method: POST
-    Endpoint: /api/v1/expense
-    Header: Content-Type: application/json
+    Method: POST,
+    Endpoint: /api/v1/expense,
+    Header: Content-Type: application/json,
     Body example:
         {
         'date': "2020-10-01",
@@ -60,7 +60,7 @@
         }
 
 5. Delete a budget from the budgets list. As <int:budget_id> indicate the position of the budget on the budgets list.
-    Method: DELETE
+    Method: DELETE,
     Endpoint: /api/v1/main/<int:budget_id>
 
 
